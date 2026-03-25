@@ -266,7 +266,7 @@ void miningTaskCore1(void * parameter) {
     // Double SHA256
     mbedtls_sha256_init(&ctx);
     mbedtls_sha256_starts(&ctx, 0);
-    mbedtls_sha256_update(&ctx, 80);
+    mbedtls_sha256_update(&ctx, data, 80);
     mbedtls_sha256_finish(&ctx, hash);
     mbedtls_sha256_free(&ctx);
     
