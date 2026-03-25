@@ -1,4 +1,4 @@
-name: Build Complete Rabbit Miner Firmware
+name: Build Rabbit Miner V2 - Complete Firmware
 
 on:
   push:
@@ -41,23 +41,30 @@ jobs:
     - name: Build firmware
       run: pio run
     
-    - name: Merge firmware files into complete binary
+    - name: Create complete firmware image
       run: |
         cd .pio/build/esp32-2432S028
+        
+        # Merge all components into complete 4MB flash image
         python ~/.platformio/packages/tool-esptoolpy/esptool.py \
           --chip esp32 merge_bin \
-          -o RabbitMiner-Complete.bin \
+          -o RabbitMiner-V2-Complete.bin \
           --flash_mode dio \
           --flash_freq 40m \
           --flash_size 4MB \
           0x1000 bootloader.bin \
           0x8000 partitions.bin \
           0x10000 firmware.bin
-        cp RabbitMiner-Complete.bin ../../../RabbitMiner-Complete.bin
+        
+        # Copy to project root
+        cp RabbitMiner-V2-Complete.bin ../../../
+        
+        echo "Firmware size:"
+        ls -lh ../../../RabbitMiner-V2-Complete.bin
     
     - name: Upload complete firmware
       uses: actions/upload-artifact@v4
       with:
-        name: RabbitMiner-Complete-Firmware
-        path: RabbitMiner-Complete.bin
+        name: RabbitMiner-V2-Complete-Firmware
+        path: RabbitMiner-V2-Complete.bin
         retention-days: 90
